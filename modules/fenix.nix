@@ -142,7 +142,7 @@
         else
           fenix.fromManifestFile cfg.manifest)
       else if cfg.channel != null then
-        apply fenix.${cfg.channel} cfg.profile cfg.components cfg.target)
+        apply fenix.${cfg.channel} cfg.profile cfg.components cfg.target
       else if cfg.profile != null then
         apply fenix.${cfg.profile} null cfg.components cfg.target
       else
