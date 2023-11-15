@@ -14,12 +14,12 @@
           };
 
           profile = mkOption {
-            type = types.nullOr types.enum [
+            type = types.nullOr (types.enum [
               "minimal"
               "default"
               "complete"
               "latest"
-            ];
+            ]);
             default = null;
             description = mdDoc ''
               The profile that the Fenix toolchain will be constructed with.
@@ -29,7 +29,7 @@
           };
 
           channel = mkOption {
-            type = types.nullOr types.enum [ "stable" "beta" "nightly" ];
+            type = types.nullOr (types.enum [ "stable" "beta" "nightly" ]);
             default = null;
             description = mdDoc ''
               The channel that the Fenix toolchain will be constructed from.
