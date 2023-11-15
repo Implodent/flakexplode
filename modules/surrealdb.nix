@@ -1,13 +1,14 @@
+{ flake-parts-lib, lib, inputs, ... }:
 let
   mapNullable = opt: mapper: if opt != null then (if builtins.isFunction mapper then mapper opt else mapper) else "";
   mapBind = bind: if builtins.isString bind then bind else "${bind.hostname}:${bind.port}";
   mapAuth = auth: "--auth --user ${auth.username} --pass ${auth.password}";
 in
 {
-  perSystem = { config, lib, pkgs, system, ... }: with lib; {
+  perSystem = { config, lib, system, ... }: with lib; {
     options.surrealdb = mkOption {
       description = mdDoc ''
-        A SurrealDB flake-parts module, allowing declarative configuration of SurrealDB and ease of use of the configured executable.
+      A SurrealDB flake-parts module, allowing declarative configuration of SurrealDB and ease of use of the configured executable.
       '';
 
       type = types.submodule {
@@ -15,16 +16,16 @@ in
           type = types.package;
           default = inputs.surrealdb.packages.${system} ? pkgs.surrealdb;
           description = mdDoc ''
-            The SurrealDB package to use.
+          The SurrealDB package to use.
           '';
         };
         wrapper = mkOption {
           type = types.package;
           description = mdDoc ''
-            The SurrealDB package, wrapped with the config options.
+          The SurrealDB package, wrapped with the config options.
           '';
           default = pkgs.writeShellScriptBin "surreal-start" ''
-            exec ${config.package}/bin/surreal start ${mapNullable config.options.strict "--strict"}${mapNullable config.options.bind mapBind}${mapNullable config.options.auth mapAuth}{mapNullable config.options.logLevel (level: "--log ${level}")}${config.storage}
+          exec ${config.surrealdb.package}/bin/surreal start ${mapNullable config.surrealdb.options.strict "--strict"}${mapNullable config.surrealdb.options.bind mapBind}${mapNullable config.surrealdb.options.auth mapAuth}${mapNullable config.surrealdb.options.logLevel (level: "--log ${level}")}${config.surrealdb.storage}
           '';
         };
         options = {
@@ -32,15 +33,15 @@ in
             type = types.str;
             default = "memory";
             description = mdDoc ''
-              Sets the database path used for storing data
-              Can be one of memory, file:<path>, tikv:<addr>, file://<path>, tikv://<addr> 
+            Sets the database path used for storing data
+            Can be one of memory, file:<path>, tikv:<addr>, file://<path>, tikv://<addr> 
             '';
           };
           strict = mkOption {
             type = types.bool;
             default = false;
             description = mdDoc ''
-              Enable [strict mode](https://surrealdb.com/docs/guides/strict-mode) for this SurrealDB instance.
+            Enable [strict mode](https://surrealdb.com/docs/guides/strict-mode) for this SurrealDB instance.
             '';
           };
           bind = mkOption {
@@ -49,19 +50,19 @@ in
                 type = types.str;
                 default = "0.0.0.0";
                 description = mdDoc ''
-                  The hostname to listen for connection on.
+                The hostname to listen for connection on.
                 '';
               };
               port = mkOption {
                 type = types.port;
                 default = 8000;
                 description = mdDoc ''
-                  The port to listen for connection on.
+                The port to listen for connection on.
                 '';
               };
             };
             description = mdDoc ''
-              The hostname or IP address to listen for connections on.
+            The hostname or IP address to listen for connections on.
             '';
           };
           logLevel = mkOption {
@@ -69,7 +70,7 @@ in
             type = types.enum [ "error" "warn" "info" "debug" "trace" "full" ];
             example = "debug";
             description = mdDoc ''
-              The logging level for the database server.
+            The logging level for the database server.
             '';
           };
           auth = mkOption {
@@ -78,24 +79,25 @@ in
               user = mkOption {
                 type = types.str;
                 description = mdDoc ''
-                  The master username for the database. Usually `root`.
+                The master username for the database. Usually `root`.
                 '';
                 example = "root";
               };
               password = mkOption {
                 type = types.nullOr types.str;
                 description = mdDoc ''
-                  The master password for the database.
+                The master password for the database.
                 '';
               };
             };
             description = mdDoc ''
-              Configure authentication for this SurrealDB instance.
-              NOTE: It is strongly recommended to enable auth mode (set auth to something non-null) when deploying SurrealDB in production. Not having it enabled can result in unauthorised access to your database.
+            Configure authentication for this SurrealDB instance.
+            NOTE: It is strongly recommended to enable auth mode (set auth to something non-null) when deploying SurrealDB in production. Not having it enabled can result in unauthorised access to your database.
             '';
           };
         };
       };
     };
   };
+  _file = __curPos.file;
 }
