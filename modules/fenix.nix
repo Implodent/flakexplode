@@ -6,7 +6,7 @@
   in with lib;
     {
       options.fenix = mkOption {
-        type = types.withSubmodule {
+        type = types.submodule {
           enable = mkOption {
             types = types.bool;
             default = false;
@@ -55,7 +55,7 @@
           };
 
           precise = mkOption {
-            type = types.nullOr (types.withSubmodule {
+            type = types.nullOr (types.submodule {
               root = mkOption {
                 type = types.str;
                 default = "https://static.rust-lang.org/dist";

@@ -10,7 +10,7 @@ in
         A SurrealDB flake-parts module, allowing declarative configuration of SurrealDB and ease of use of the configured executable.
       '';
 
-      type = types.submoduleWith {
+      type = types.submodule {
         package = mkOption {
           type = types.package;
           default = inputs.surrealdb.packages.${system} ? pkgs.surrealdb;
@@ -44,7 +44,7 @@ in
             '';
           };
           bind = mkOption {
-            type = types.either (types.str) types.submoduleWith {
+            type = types.either (types.str) types.submodule {
               hostname = mkOption {
                 type = types.str;
                 default = "0.0.0.0";
@@ -74,7 +74,7 @@ in
           };
           auth = mkOption {
             default = null;
-            type = types.submoduleWith {
+            type = types.submodule {
               user = mkOption {
                 type = types.str;
                 description = mdDoc ''
